@@ -36,14 +36,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var json_config_1 = require("../config/json.config");
 var uuidv4 = require('uuid').v4;
 var User = require('../models/user.model');
+var main = require('../config/mail.config');
 var signUp = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, name_1, email, shares, user, code, error_1;
+    var _a, name_1, email, shares, user, code, token, template, error_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _b.trys.push([0, 2, , 3]);
+                _b.trys.push([0, 3, , 4]);
                 _a = req.body, name_1 = _a.name, email = _a.email, shares = _a.shares;
                 return [4 /*yield*/, User.findOne({ email: email })];
             case 1:
@@ -56,16 +58,27 @@ var signUp = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 }
                 code = uuidv4();
                 user = new User({ name: name_1, email: email, code: code });
-                return [3 /*break*/, 3];
+                token = (0, json_config_1.createToken)(user);
+                template = main.setTemplate(user.name, user.email);
+                main.sendEmail(user.email, 'Test Email', template);
+                return [4 /*yield*/, user.save()];
             case 2:
+                _b.sent();
+                res.json({
+                    success: true,
+                    msg: 'User registered correctly'
+                });
+                return [3 /*break*/, 4];
+            case 3:
                 error_1 = _b.sent();
                 console.log(error_1);
                 return [2 /*return*/, res.json({
                         success: false,
                         msg: 'Error while registering user'
                     })];
-            case 3: return [2 /*return*/];
+            case 4: return [2 /*return*/];
         }
     });
 }); };
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidXNlci5jb250cm9sbGVyLmpzIiwic291cmNlUm9vdCI6Ii4vc3JjLyIsInNvdXJjZXMiOlsiY29udHJvbGxlcnMvdXNlci5jb250cm9sbGVyLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBQ1EsSUFBSSxNQUFNLEdBQUssT0FBTyxDQUFDLE1BQU0sQ0FBQyxHQUFwQixDQUFxQjtBQUN2QyxJQUFNLElBQUksR0FBRyxPQUFPLENBQUMsc0JBQXNCLENBQUMsQ0FBQTtBQUU1QyxJQUFNLE1BQU0sR0FBRyxVQUFPLEdBQVEsRUFBRSxHQUFROzs7Ozs7Z0JBRTFCLEtBQXdCLEdBQUcsQ0FBQyxJQUFJLEVBQS9CLGdCQUFJLEVBQUUsS0FBSyxXQUFBLEVBQUUsTUFBTSxZQUFBLENBQWE7Z0JBQ3hCLHFCQUFNLElBQUksQ0FBQyxPQUFPLENBQUMsRUFBQyxLQUFLLE9BQUEsRUFBQyxDQUFDLEVBQUE7O2dCQUF0QyxJQUFJLEdBQU8sQ0FBQSxTQUEyQixLQUFJLElBQUk7Z0JBQ2xELElBQUcsSUFBSSxLQUFLLElBQUksRUFBQztvQkFDYixzQkFBTyxHQUFHLENBQUMsSUFBSSxDQUFDOzRCQUNaLE9BQU8sRUFBRSxLQUFLOzRCQUNkLEdBQUcsRUFBRSxxQkFBcUI7eUJBQzdCLENBQUMsRUFBQTtpQkFDTDtnQkFDSyxJQUFJLEdBQUcsTUFBTSxFQUFFLENBQUM7Z0JBRXRCLElBQUksR0FBRyxJQUFJLElBQUksQ0FBQyxFQUFDLElBQUksUUFBQSxFQUFFLEtBQUssT0FBQSxFQUFFLElBQUksTUFBQSxFQUFDLENBQUMsQ0FBQTs7OztnQkFHcEMsT0FBTyxDQUFDLEdBQUcsQ0FBQyxPQUFLLENBQUMsQ0FBQztnQkFDbkIsc0JBQU8sR0FBRyxDQUFDLElBQUksQ0FBQzt3QkFDWixPQUFPLEVBQUUsS0FBSzt3QkFDZCxHQUFHLEVBQUUsOEJBQThCO3FCQUN0QyxDQUFDLEVBQUE7Ozs7S0FHVCxDQUFBIn0=
+exports.default = signUp;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidXNlci5jb250cm9sbGVyLmpzIiwic291cmNlUm9vdCI6Ii4vc3JjLyIsInNvdXJjZXMiOlsiY29udHJvbGxlcnMvdXNlci5jb250cm9sbGVyLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBQ0EscURBQWlFO0FBQ3pELElBQUksTUFBTSxHQUFLLE9BQU8sQ0FBQyxNQUFNLENBQUMsR0FBcEIsQ0FBcUI7QUFDdkMsSUFBTSxJQUFJLEdBQUcsT0FBTyxDQUFDLHNCQUFzQixDQUFDLENBQUE7QUFDNUMsSUFBTSxJQUFJLEdBQUcsT0FBTyxDQUFDLHVCQUF1QixDQUFDLENBQUE7QUFFN0MsSUFBTSxNQUFNLEdBQUcsVUFBTyxHQUFZLEVBQUUsR0FBYTs7Ozs7O2dCQUVuQyxLQUF3QixHQUFHLENBQUMsSUFBSSxFQUEvQixnQkFBSSxFQUFFLEtBQUssV0FBQSxFQUFFLE1BQU0sWUFBQSxDQUFhO2dCQUN2QixxQkFBTSxJQUFJLENBQUMsT0FBTyxDQUFDLEVBQUMsS0FBSyxPQUFBLEVBQUMsQ0FBQyxFQUFBOztnQkFBdkMsSUFBSSxHQUFRLENBQUEsU0FBMkIsS0FBSSxJQUFJO2dCQUNuRCxJQUFHLElBQUksS0FBSyxJQUFJLEVBQUM7b0JBQ2Isc0JBQU8sR0FBRyxDQUFDLElBQUksQ0FBQzs0QkFDWixPQUFPLEVBQUUsS0FBSzs0QkFDZCxHQUFHLEVBQUUscUJBQXFCO3lCQUM3QixDQUFDLEVBQUE7aUJBQ0w7Z0JBQ0ssSUFBSSxHQUFHLE1BQU0sRUFBRSxDQUFDO2dCQUV0QixJQUFJLEdBQUcsSUFBSSxJQUFJLENBQUMsRUFBQyxJQUFJLFFBQUEsRUFBRSxLQUFLLE9BQUEsRUFBRSxJQUFJLE1BQUEsRUFBQyxDQUFDLENBQUM7Z0JBRS9CLEtBQUssR0FBRyxJQUFBLHlCQUFXLEVBQUMsSUFBSSxDQUFDLENBQUM7Z0JBRTFCLFFBQVEsR0FBRyxJQUFJLENBQUMsV0FBVyxDQUFDLElBQUksQ0FBQyxJQUFJLEVBQUUsSUFBSSxDQUFDLEtBQUssQ0FBQyxDQUFBO2dCQUV4RCxJQUFJLENBQUMsU0FBUyxDQUFDLElBQUksQ0FBQyxLQUFLLEVBQUUsWUFBWSxFQUFFLFFBQVEsQ0FBQyxDQUFBO2dCQUNsRCxxQkFBTSxJQUFJLENBQUMsSUFBSSxFQUFFLEVBQUE7O2dCQUFqQixTQUFpQixDQUFDO2dCQUNsQixHQUFHLENBQUMsSUFBSSxDQUFDO29CQUNMLE9BQU8sRUFBRSxJQUFJO29CQUNiLEdBQUcsRUFBRSwyQkFBMkI7aUJBQ25DLENBQUMsQ0FBQTs7OztnQkFHRixPQUFPLENBQUMsR0FBRyxDQUFDLE9BQUssQ0FBQyxDQUFDO2dCQUNuQixzQkFBTyxHQUFHLENBQUMsSUFBSSxDQUFDO3dCQUNaLE9BQU8sRUFBRSxLQUFLO3dCQUNkLEdBQUcsRUFBRSw4QkFBOEI7cUJBQ3RDLENBQUMsRUFBQTs7OztLQUdULENBQUE7QUFFRCxrQkFBZSxNQUFNLENBQUMifQ==
