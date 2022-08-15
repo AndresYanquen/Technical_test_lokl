@@ -1,8 +1,11 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { createToken, verifyToken } from "../config/json.config";
 import { MailService } from "../config/mail.config";
 import  {User}  from "../models/user.model";
 import {DataStoredInToken} from '../config/json.config';
+import { decode, JsonWebTokenError } from "jsonwebtoken";
+import {secret} from '../config/json.config';
+import {jwt} from '../config/json.config';
 const { v4: uuidv4 } = require('uuid');
 
 
@@ -96,5 +99,40 @@ const confirm = async (req: Request, res: Response) => {
     }
   }
 
-export {signUp, confirm};
+  const verifyUser = async (req: Request, res: Response, next: NextFunction) =>{
+      let token:string | undefined = req.header('Authorization');
+      if(!token){
+          res.status(401).send({
+            error: 'Token is required to authentication'
+        })
+      }
+
+      if(token?.startsWith('Bearer ')){
+        token = token.replace('Bearer ', '');
+      }
+
+      if(token){
+        jwt.verify(token, secret, (error:string, decoded:DataStoredInToken)=>{
+            if(error){
+                return res.json({
+                    message: `Token is not valid -> ${error}`
+                })
+            }else{
+                next()
+            }
+        })
+      }
+
+
+
+  }
+
+  const getUsersInformation = async (req: Request, res: Response) =>{
+    const verified_users:string[] = await User.find({status: true, date: {$gte:new Date(req.body.from) , $lte:new Date(req.body.until)} });
+    res.send(verified_users)
+  }
+
+
+
+export {signUp, confirm, verifyUser, getUsersInformation};
 
