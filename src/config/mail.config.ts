@@ -25,24 +25,38 @@ class Service {
     </head>
 
     <div id="email___content">
-      <h2>Hola ${name}</h2>
-      <p>Para confirmar tu cuenta, ingresa al siguiente enlace</p>
+      <h2>Hello ${name}</h2>
+      <p>To confirm your account, please</p>
       <a
-          href="http://localhost:4000/api/user/confirm/${token}"
+          href="http://localhost:4000/api/users/confirm/${token}"
           target="_blank"
       >Confirmar Cuenta</a>
     </div>
     `;
   };
+
+  public notificationEmail = async (name: string, email:string) =>{
+    return `
+    <head>
+    <link rel="stylesheet" href="./style.css">
+    </head>
+
+    <div id="email___content">
+    <h2>Hello admin!</h2>
+    <p>This user has verified the email:</p>
+    <p>name: ${name}</p>
+    <p>email: ${email}</p>
+    </div>
+    `;
+  }
     
 
-  public sendEmail = async (email: string, subject: string, html: any) =>{
+  public sendEmail = async (email: string, subject: string, html: string) =>{
     try {
-      const info = await this.transporter.sendMail({
+        await this.transporter.sendMail({
         from: `CodeTester <${email}>`,
         to: email,
         subject,
-        text: "This is your verification token",
         html,
         headers: { 'x-myheader': 'test header' }
       });

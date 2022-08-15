@@ -2,11 +2,10 @@ import { Request, Response } from "express";
 import { createToken, verifyToken } from "../config/json.config";
 import { MailService } from "../config/mail.config";
 import  {User}  from "../models/user.model";
+import {DataStoredInToken} from '../config/json.config';
 const { v4: uuidv4 } = require('uuid');
 
-interface DataInput{
-    
-}
+
 
 const signUp = async (req: Request, res: Response) =>{
     try {
@@ -27,18 +26,18 @@ const signUp = async (req: Request, res: Response) =>{
 
         const template = MailService.setTemplate(user.name, token);
 
-        MailService.sendEmail(user.email, 'Test Email', template)
+        MailService.sendEmail(user.email, 'Test Email', template);
         await user.save();
         res.json({
             success: true,
-            msg: 'User registered correctly'
+            msg: 'User registered properly'
         })
 
     } catch (error) {
         console.log(error);
         return res.json({
             success: false,
-            msg: 'Error while registering user'
+            msg: `Error while registering user -> ${error}`
         })
 
     }
@@ -49,7 +48,7 @@ const signUp = async (req: Request, res: Response) =>{
 const confirm = async (req: Request, res: Response) => {
     try {
         const {token} = req.params;
-        const data = await verifyToken(token);
+        const data: DataStoredInToken  = await verifyToken(token);
         
         if(data === null){
             return res.json({
@@ -78,6 +77,11 @@ const confirm = async (req: Request, res: Response) => {
         user.status = true;
         user.save();
 
+        const notificationEmail = await MailService.notificationEmail(user.name, user.email);
+
+        MailService.sendEmail('andres.yanquen@uptc.edu.co', 'Confirmation  Email', notificationEmail);
+
+
         return res.send({
             suceess:true,
             msg: 'User verified succesfully'
@@ -87,7 +91,7 @@ const confirm = async (req: Request, res: Response) => {
         console.log(error);
         return res.json({
           success: false,
-          msg: 'Error confirming user'
+          msg: `Error confirming user -> ${error}`
         }); 
     }
   }

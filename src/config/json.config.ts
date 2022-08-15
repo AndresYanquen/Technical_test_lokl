@@ -5,7 +5,7 @@ interface TokenData{
     token : string,
     expiresIn: number
 }
-interface DataStoredInToken{
+export interface DataStoredInToken{
     email: string;
     code: string
 }
@@ -24,7 +24,7 @@ export const createToken = (user: IUser): TokenData => {
     };
 }
 
-export const verifyToken = (token: string): boolean => {
+export const verifyToken = (token: string): DataStoredInToken => {
     return jwt.verify(token, secret, (error: string, decoded: any)=>{
         console.log(decoded);
         if(error){
@@ -35,3 +35,4 @@ export const verifyToken = (token: string): boolean => {
     })
     
 };
+
