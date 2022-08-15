@@ -16,13 +16,13 @@ First, install all the libraries and dependencies via:
  
 After that, create the .env file and add the following environment variables:
 
-`
+```
 PORT=4000
 JWT_SECRET=SECRET
-GMAILACCOUNT=codetesterengineer@gmail.com
-PASSWORDGMAIL=iujeafoimvrzynhu
+GMAILACCOUNT=youremailtestaccount
+PASSWORDGMAIL=yourapplicationpassword
 MONGO_CONNECTION_PORT=mongodb://127.0.0.1:27017
-ADMIN_EMAIL=andres.yanquen@uptc.edu.co
+ADMIN_EMAIL=yourinstitutionalemail
 ```
 
 You should create or enable in your email [applications password](https://support.google.com/accounts/answer/185833?hl=en).
