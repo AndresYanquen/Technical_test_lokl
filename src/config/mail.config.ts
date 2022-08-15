@@ -1,31 +1,29 @@
 import nodemailer from "nodemailer";
-import Mail from "nodemailer/lib/mailer";
 
+class Service {
+  private hostname = "smtp.gmail.com";
+  private email = process.env.GMAILACCOUNT;
+  private password = process.env.PASSWORDGMAIL;
 
-async function main() {
-  const hostname = "smtp.gmail.com";
-  const email= process.env.GMAILACCOUNT;
-  const password= process.env.PASSWORDGMAIL ;
-
-  const transporter = nodemailer.createTransport({
+  private transporter = nodemailer.createTransport({
     service:'gmail',
-    host: hostname,
+    host: this.hostname,
     port: 587,
     secure: false,
     requireTLS: true,
     auth: {
-      user: email,
-      pass: password,
+        user: this.email,
+        pass: this.password,
     },
     logger: true
   });
 
-  const setTemplate = (name:string, token:string) =>{
+  public setTemplate = (name: string, token: string): string =>{
     return `
     <head>
       <link rel="stylesheet" href="./style.css">
     </head>
-  
+
     <div id="email___content">
       <h2>Hola ${name}</h2>
       <p>Para confirmar tu cuenta, ingresa al siguiente enlace</p>
@@ -35,12 +33,12 @@ async function main() {
       >Confirmar Cuenta</a>
     </div>
     `;
-  }
-  
+  };
+    
 
-  const sendEmail = async (email:string, subject:string, html:any) =>{
+  public sendEmail = async (email: string, subject: string, html: any) =>{
     try {
-      const info = await transporter.sendMail({
+      const info = await this.transporter.sendMail({
         from: `CodeTester <${email}>`,
         to: email,
         subject,
@@ -52,9 +50,7 @@ async function main() {
     } catch (error) {
         console.log(`Error sending email: ${error}`);
     }
-  }
-
-
+  };
 }
 
-export default main;
+export const MailService = new Service();

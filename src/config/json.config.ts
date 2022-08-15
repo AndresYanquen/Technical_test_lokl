@@ -1,35 +1,22 @@
-import { sign, verify } from 'jsonwebtoken';
-import User from '../models/user.model';
+import { Secret, sign, verify } from 'jsonwebtoken';
+import { IUser } from '../models/user.model';
 var jwt = require('jsonwebtoken');
-
-
-
 interface TokenData{
     token : string,
     expiresIn: number
 }
-
 interface DataStoredInToken{
-    _id: string
+    email: string;
+    code: string
 }
 
-interface UserData{
-    name: string,
-    email: string,
-    shares: number,
-    status: string,
+const secret: string  = process.env.JWT_SECRET || "secret";
 
-}
-
-
-const secret: string  = process.env.JWT_SECRET;
-
-
-
-const createToken = (user:UserData):TokenData=>{
+export const createToken = (user: IUser): TokenData => {
     const expiresIn = 60*60;
     const dataStoredInToken: DataStoredInToken = {
-        _id:user.email,
+        email: user.email,
+        code: user.code
     }
     return {
         expiresIn,
@@ -37,16 +24,14 @@ const createToken = (user:UserData):TokenData=>{
     };
 }
 
-const verifyToken = (token:string):boolean =>{
-    jwt.verify(token, secret, (error:string, decoded:any)=>{
-        let data = null;
+export const verifyToken = (token: string): boolean => {
+    return jwt.verify(token, secret, (error: string, decoded: any)=>{
+        console.log(decoded);
         if(error){
             console.log('Error fetching data');
-        }else{
-            data = decoded;
         }
-    })
-    return false
-}
 
-export {createToken, verifyToken}
+        return decoded;
+    })
+    
+};

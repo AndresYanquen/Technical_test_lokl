@@ -1,10 +1,11 @@
 import express from 'express';
 const router = express.Router();
-import signUp from '../controllers/user.controller';
+import {signUp, confirm} from '../controllers/user.controller';
 
 
 
-router.post('/signup', signUp)
+router.post('/signup', signUp);
+router.get('/confirm/:token', confirm)
 
 export default router;
 
