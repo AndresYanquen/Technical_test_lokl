@@ -8,6 +8,7 @@ import {secret} from '../config/json.config';
 import {jwt} from '../config/json.config';
 const { v4: uuidv4 } = require('uuid');
 
+const admin_email:string= process.env.ADMIN_EMAIL || 'andres.yanquen@uptc.edu.co';
 
 
 const signUp = async (req: Request, res: Response) =>{
@@ -63,7 +64,7 @@ const confirm = async (req: Request, res: Response) => {
         const {email, code} = data;
         
         const user = await User.findOne({email});
-        if (user ===null) {
+        if (!user) {
             return res.json({
                 success: false,
                 msg: 'User does not exist'
@@ -82,7 +83,7 @@ const confirm = async (req: Request, res: Response) => {
 
         const notificationEmail = await MailService.notificationEmail(user.name, user.email);
 
-        MailService.sendEmail('andres.yanquen@uptc.edu.co', 'Confirmation  Email', notificationEmail);
+        MailService.sendEmail(admin_email, 'Confirmation  Email', notificationEmail);
 
 
         return res.send({

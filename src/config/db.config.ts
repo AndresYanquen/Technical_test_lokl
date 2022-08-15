@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const url:string = 'mongodb://127.0.0.1:27017/local';
+const url:string = process.env.MONGO_CONNECTION_PORT || 'mongodb://127.0.0.1:27017';
 
 const connectDB = async () =>{
     try{
