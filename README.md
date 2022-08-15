@@ -18,11 +18,12 @@ After that, create the .env file and add the following environment variables:
 
 `
 PORT=4000
-JWT_SECRET='SECRET'
-GMAILACCOUNT='yourtesteraccount@youremailprovider.com'
-PASSWORDGMAIL='yourapplicationpassword'
-MONGO_CONNECTION_PORT='mongodb://127.0.0.1:27017/'
-`
+JWT_SECRET=SECRET
+GMAILACCOUNT=codetesterengineer@gmail.com
+PASSWORDGMAIL=iujeafoimvrzynhu
+MONGO_CONNECTION_PORT=mongodb://127.0.0.1:27017
+ADMIN_EMAIL=andres.yanquen@uptc.edu.co
+```
 
 You should create or enable in your email [applications password](https://support.google.com/accounts/answer/185833?hl=en).
 
